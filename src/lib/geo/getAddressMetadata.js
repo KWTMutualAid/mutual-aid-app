@@ -11,9 +11,10 @@ const geonamesClient = new Geonames({
 });
 
 module.exports = async function getAddressMetadata(address) {
+  const bkAddress = `${address} Brooklyn`;
   const geoResult = await googleGeoClient.geocode({
     params: {
-      address,
+      address: bkAddress,
       region: "us",
       components: {
         locality: "New York City",

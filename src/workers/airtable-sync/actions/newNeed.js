@@ -1,12 +1,23 @@
 const slackapi = require("~slack/webApi");
 const { findChannelByName, addBotToChannel } = require("~slack/channels");
-const { REQUESTS_CHANNEL } = require("~slack/constants");
+const { REQUESTS_CHANNEL, REQUESTS_TEST_CHANNEL } = require("~slack/constants");
 const { needsFields, needsTable } = require("~airtable/tables/needs");
 const { str } = require("~strings/i18nextWrappers");
 const getAddressMetadata = require("~lib/geo/getAddressMetadata");
 
 module.exports = async function newNeed(need) {
-  const needsChannel = await findChannelByName(REQUESTS_CHANNEL);
+  let channel;
+  if (
+    need.get(needsFields.directedTo) ===
+    needsFields.directedTo_options.communityNeedsTest
+  ) {
+    channel = REQUESTS_TEST_CHANNEL;
+  }
+
+  if (!channel) {
+    return;
+  }
+  const needsChannel = await findChannelByName(channel);
   await addBotToChannel(needsChannel.id);
 
   const id = need.get(needsFields.shortId);

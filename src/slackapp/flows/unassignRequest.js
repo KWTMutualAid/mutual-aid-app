@@ -1,5 +1,8 @@
 const slackapi = require("~slack/webApi");
-const { sendThreadPostFactory, findChannelByName } = require("~slack/channels");
+const {
+  findChannelByName,
+  sendEphemeralPostFactory
+} = require("~slack/channels");
 const {
   updateNeedByShortId,
   findNeedByShortId,
@@ -10,22 +13,40 @@ const { str } = require("~strings/i18nextWrappers");
 
 exports.unassignRequest = async payload => {
   const slackThreadId = payload.container.message_ts;
+  const slackUserId = payload.user.id;
   const slackChannelId = payload.container.channel_id;
   const id = payload.actions[0].value;
+  const sendEphemeralPost = sendEphemeralPostFactory(
+    slackChannelId,
+    slackUserId,
+    slackThreadId
+  );
   console.log(`Unassign delivery: ${id}`);
-  const sendThreadPost = sendThreadPostFactory(slackChannelId, slackThreadId);
   try {
     const [need, _err] = await findNeedByShortId(id);
     if (!need) {
-      await sendThreadPost(
-        "It looks like this request could have been deleted :/"
+      sendEphemeralPost(
+        `It looks like this request could have been deleted (id: ${id}) :/`
       );
-      return;
+      return {};
+    }
+
+    if (need.get(needsFields.status) === needsFields.status_options.completed) {
+      sendEphemeralPost(`Request is already complete!`);
+      return {};
+    }
+
+    if (need.get(needsFields.delivererSlackId) !== slackUserId) {
+      sendEphemeralPost(
+        `Looks like you aren't assigned to this request. Maybe you clicked unassign?`
+      );
+      return {};
     }
 
     const [_updated, uerr] = await updateNeedByShortId(id, {
       [needsFields.status]: needsFields.status_options.posted,
-      [needsFields.delivererSlackId]: ""
+      [needsFields.delivererSlackId]: "",
+      [needsFields.volunteer]: ""
     });
     if (uerr) {
       throw new Error(uerr);
@@ -34,12 +55,15 @@ exports.unassignRequest = async payload => {
     const needPostThreadId = need.get(needsFields.slackThreadId);
     const needsChannel = await findChannelByName(REQUESTS_CHANNEL);
     await updateNeedPost(needPostThreadId, needsChannel.id, id);
+
+    sendEphemeralPost(`Unassign Success!`);
   } catch (error) {
-    await sendThreadPost(
-      "There was an error assigning to delivery :( Please try again!"
-    );
     console.log(`Assign delivery error for ${id}: ${error}`);
+    sendEphemeralPost(
+      "There was an error unassigning request :( Please try again!"
+    );
   }
+  return {};
 };
 
 const updateNeedPost = async (threadId, channelId, id) => {

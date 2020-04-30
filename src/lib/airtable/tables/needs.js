@@ -187,6 +187,7 @@ const fields = (exports.needsFields = {
     acmwRamadanFoodPantryGift: "ACMW Ramadan Food Pantry Gift",
     makingMasksPpe: "#making-masks-ppe",
     communityNeeds: "#community-needs",
+    communityNeedsTest: "#community-needs-test",
     christApostolicChurchGokeFoodPantry:
       "Christ Apostolic Church Goke Food Pantry",
     nationalSuicidePreventionLifeline8002738255:

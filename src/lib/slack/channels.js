@@ -94,6 +94,19 @@ module.exports.listMembers = async channelId => {
   return [members, null];
 };
 
+module.exports.sendEphemeralPostFactory = (channelId, userId, threadId) => {
+  async function sendThreadPost(message) {
+    await slackapi.chat.postMessage({
+      token: process.env.SLACK_BOT_TOKEN,
+      channel: channelId,
+      user: userId,
+      text: message,
+      thread_ts: threadId
+    });
+  }
+  return sendThreadPost;
+};
+
 module.exports.sendThreadPostFactory = (channelId, threadId) => {
   async function sendThreadPost(message) {
     await slackapi.chat.postMessage({

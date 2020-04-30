@@ -41,7 +41,7 @@ function startWorker(interval) {
           );
         }
         // TODO: Think about how to rate limit this to Airtable's 5 rps
-        if (record.didChange(needsFields.shortId)) {
+        if (record.didChange(needsFields.directedTo)) {
           promises.push(newNeed(record));
         }
       });
