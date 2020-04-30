@@ -41,10 +41,9 @@ function startWorker(interval) {
           );
         }
         // TODO: Think about how to rate limit this to Airtable's 5 rps
-        if (
-          record.getPrior(needsFields.directedTo).length !==
-          record.get(needsFields.directedTo).length
-        ) {
+        const priorTo = record.getPrior(needsFields.directedTo) || [];
+        const currentTo = record.get(needsFields.directedTo) || [];
+        if (priorTo.length !== currentTo.length) {
           promises.push(newNeed(record));
         }
       });
