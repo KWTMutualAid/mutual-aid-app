@@ -1,11 +1,8 @@
 const { createMessageAdapter } = require("@slack/interactive-messages");
-const {
-  atdViewSubmission,
-  atdViewSubmissionCallbackId,
-  atdViewOpen
-} = require("../flows/assignToDelivery.js");
+const { assignToDelivery } = require("../flows/assignToDelivery.js");
+const { completeRequest } = require("../flows/completeRequest.js");
+const { unassignRequest } = require("../flows/unassignRequest.js");
 
-const createDeliveryRequest = require("../flows/createDeliveryRequest");
 const editPost = require("../flows/editPost");
 
 const slackInteractions = createMessageAdapter(
@@ -13,32 +10,30 @@ const slackInteractions = createMessageAdapter(
 );
 
 // ==================================================================
-// Callbacks / entry points registered in Slack
-// ==================================================================
-
-const atdViewOpenEntryId = "assign-to-delivery";
-
-// ==================================================================
 // Assign To Delivery flow
 // ==================================================================
 
 slackInteractions.action(
   {
-    type: "message_action",
-    callbackId: atdViewOpenEntryId
+    type: "button",
+    actionId: "assign-need-to-me"
   },
-  atdViewOpen
+  assignToDelivery
 );
-
-slackInteractions.viewSubmission(
-  { callbackId: atdViewSubmissionCallbackId },
-  atdViewSubmission
+slackInteractions.action(
+  {
+    type: "button",
+    actionId: "request-complete"
+  },
+  completeRequest
 );
-
-// ==================================================================
-// Delivery Request Post flow
-// ==================================================================
-createDeliveryRequest.register(slackInteractions);
+slackInteractions.action(
+  {
+    type: "button",
+    actionId: "request-unassign"
+  },
+  unassignRequest
+);
 
 // ==== Edit Post flow ====
 editPost.register(slackInteractions);

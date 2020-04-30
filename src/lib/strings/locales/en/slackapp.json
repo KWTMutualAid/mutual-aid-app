@@ -3,7 +3,7 @@
     "admin": "admin",
     "artAndDesign": "art_and_design",
     "carsAndBikes": "cars_and_bikes",
-    "communityRequests": "community_needs",
+    "communityRequests": "community_needs_test",
     "intakeVolunteers": "intake_volunteers",
     "deliveryVolunteers": "delivery_volunteers",
     "flyering": "flyer_squad",
@@ -88,65 +88,6 @@
       "title": "Assign to Delivery"
     }
   },
-  "requestBotPost": {
-    "modal": {
-      "title": "Create Delivery Request",
-      "error": {
-        "noVolunteer": "No volunteer with email: {{- userEmail}}. Did you use your slack email to sign up?",
-        "pendingRequests": "Error looking up pending requests:",
-        "noPendingRequests": "Couldn't find any pending requests. Do you have requests assigned to you in the 'Delivery Needed' state?\n It's also possible you already posted this in Slack using the bot.",
-        "requestNotFound": "Request wasn't found"
-      },
-      "picker": {
-        "submit": "Create Message",
-        "message": "Pick a request"
-      },
-      "draft": {
-        "submit": "Preview",
-        "channelSelect": "Select a channel",
-        "label": "Draft Message"
-      },
-      "confirm": {
-        "submit": "Send",
-        "edit": "Edit"
-      }
-    },
-    "post": {
-      "fields": {
-        "timeline": {
-          "name": "Timeline",
-          "default": "When convenient"
-        },
-        "neighborhood": {
-          "name": "Neighborhood",
-          "default": "Other - Unknown"
-        },
-        "needs": {
-          "name": "Need"
-        },
-        "streets": {
-          "name": "Cross Streets"
-        },
-        "language": {
-          "name": "Language"
-        },
-        "notes": {
-          "name": "Description",
-          "default": "No notes"
-        }
-      },
-      "statusPrefix": {
-        "default": ":red_circle:",
-        "assigned": ":white_check_mark: REQUEST ASSIGNED\n",
-        "completed": ":heavy_check_mark:  REQUEST COMPLETED\n"
-      },
-      "message": {
-        "intro": "Hey <!channel> we have a new request from our neighbor {{firstName}} at {{streets}} in *{{quadrant}}*",
-        "outro": "*Want to volunteer to help our neighbor{{firstName}}?* Comment on this thread and {{- intakeSlackId}} will follow up with more details.\n_Reminder: Please don’t volunteer for delivery if you have any COVID-19/cold/flu-like symptoms, or have come into contact with someone that’s tested positive._"
-      },
-      "deliveryCongrats": ":tada: Shout out to {{- deliveryVolunteer}} for volunteering to help! :tada:\n"
-    }
-  },
   "editBotPost": {
     "modal": {
       "error": {
@@ -171,6 +112,19 @@
       "button": {
         "deletion": "Delete Post",
         "confirm": "Are you sure?"
+      }
+    }
+  },
+  "needsBotPost": {
+    "post": {
+      "statusPrefix": {
+        "assigned": ":white_check_mark: REQUEST ASSIGNED\n",
+        "completed": ":heavy_check_mark:  REQUEST COMPLETED\n",
+        "default": ":red_circle:"
+      },
+      "message": {
+        "intro": "A neighbor at {{- streets}} needs your support",
+        "outro": "_*Note*: By accepting this request, you're requesting responsibility for completing it._"
       }
     }
   }

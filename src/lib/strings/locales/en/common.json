@@ -1,18 +1,19 @@
 {
   "notAvailable": "n/a",
-  "appName": "Crown Heights Mutual Aid",
+  "appName": "KWT Mutual Aid",
   "close": "Close",
   "assignDelivery": {
     "dm": {
       "message": {
         "default": "Delivery has been assigned!",
         "text": "Thanks to you both for volunteering. Here's some details on the request. Let's help some neighbors!",
-        "reminder": "_*Reminder:* When you make a delivery, drop the groceries at the door, step 6 feet away, and make sure that the recipient knows to wipe down all the groceries (or wash with soap and water)_"
+        "reminder": "_*Reminder:* When you make a delivery, drop the groceries at the door, step 6 feet away, and make sure that the recipient knows to wipe down all the groceries (or wash with soap and water)_",
+        "outro": "_*Note*: Mark this request as completed after you're done._"
       }
     }
   },
   "submit": "Submit",
   "cancel": "Cancel",
-  "neighborhood": "Crown Heights",
+  "neighborhood": "KWT",
   "save": "Save"
 }

@@ -1,11 +1,10 @@
 const ChangeDetector = require("airtable-change-detector");
 const {
-  table: requestsTable,
-  fields: requestFields,
-  SENSITIVE_FIELDS: sensitiveRequestFields
-} = require("~airtable/tables/requests");
-const updateMessageContent = require("./actions/updateMessageContent");
-const notifyManyc = require("./actions/notifyManyc");
+  needsTable,
+  needsFields,
+  needsSensitiveFields
+} = require("~airtable/tables/needs");
+const newNeed = require("./actions/newNeed");
 
 const defaultInterval = 10000;
 
@@ -18,42 +17,32 @@ function startWorker(interval) {
     pollInterval = defaultInterval;
   }
   const sharedDetectorOptions = {
-    writeDelayMs: 100,
-    lastProcessedFieldName: "Last Processed"
+    writeDelayMs: 100
   };
 
-  const requestChanges = new ChangeDetector(requestsTable, {
-    senstiveFields: sensitiveRequestFields,
+  const needsChanges = new ChangeDetector(needsTable, {
+    senstiveFields: needsSensitiveFields,
     ...sharedDetectorOptions
   });
-  requestChanges.pollWithInterval(
-    "airtable-sync.requests",
+  needsChanges.pollWithInterval(
+    "airtable-sync.needs",
     interval,
     async recordsChanged => {
       console.info(`Found ${recordsChanged.length} changes in Requests`);
       const promises = [];
       recordsChanged.forEach(record => {
-        if (record.didChange(requestFields.status)) {
-          const status = record.get(requestFields.status);
-          const newStatus = record.getPrior(requestFields.status);
+        if (record.didChange(needsFields.status)) {
+          const status = record.get(needsFields.status);
+          const newStatus = record.getPrior(needsFields.status);
           console.log(
             `${record.get(
-              requestFields.code
+              needsFields.shortId
             )} moved from ${newStatus} -> ${status}`
           );
         }
         // TODO: Think about how to rate limit this to Airtable's 5 rps
-        if (
-          record.didChange(requestFields.status) ||
-          record.didChange(requestFields.deliverySlackId) ||
-          record.didChange(requestFields.triggerBackfill)
-        ) {
-          promises.push(updateMessageContent(record));
-        }
-        if (
-          record.get(requestFields.type) === requestFields.type_options.manyc
-        ) {
-          promises.push(notifyManyc(record));
+        if (record.didChange(needsFields.shortId)) {
+          promises.push(newNeed(record));
         }
       });
       return Promise.all(promises);

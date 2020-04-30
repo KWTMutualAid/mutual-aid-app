@@ -93,3 +93,15 @@ module.exports.listMembers = async channelId => {
   }
   return [members, null];
 };
+
+module.exports.sendThreadPostFactory = (channelId, threadId) => {
+  async function sendThreadPost(message) {
+    await slackapi.chat.postMessage({
+      token: process.env.SLACK_BOT_TOKEN,
+      channel: channelId,
+      thread_ts: threadId,
+      text: message
+    });
+  }
+  return sendThreadPost;
+};
