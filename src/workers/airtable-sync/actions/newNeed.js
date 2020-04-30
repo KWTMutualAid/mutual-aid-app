@@ -8,8 +8,9 @@ const getAddressMetadata = require("~lib/geo/getAddressMetadata");
 module.exports = async function newNeed(need) {
   let channel;
   if (
-    need.get(needsFields.directedTo) ===
-    needsFields.directedTo_options.communityNeedsTest
+    need
+      .get(needsFields.directedTo)
+      .includes(needsFields.directedTo_options.communityNeedsTest)
   ) {
     channel = REQUESTS_TEST_CHANNEL;
   }
