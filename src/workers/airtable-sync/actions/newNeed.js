@@ -14,6 +14,12 @@ module.exports = async function newNeed(need) {
   ) {
     channel = REQUESTS_TEST_CHANNEL;
   }
+  if (
+    directedTo &&
+    directedTo.includes(needsFields.directedTo_options.communityNeeds)
+  ) {
+    channel = REQUESTS_CHANNEL;
+  }
 
   if (!channel) {
     return;
