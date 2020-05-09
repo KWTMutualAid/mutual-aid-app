@@ -110,6 +110,7 @@ async function makeMessageText(need) {
   const languages = need.get(needsFields.languages);
   const needs = need.get(needsFields.supportType);
   const extraFields = [
+    ["Code", need.get(needsFields.fullId)],
     [
       "Language(s)",
       languages && languages.length
