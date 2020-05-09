@@ -117,6 +117,8 @@ module.exports.sendThreadPostFactory = (channelId, threadId) => {
     });
   }
   return sendThreadPost;
+};
+
 module.exports.getExistingMessage = async (ts, channel) => {
   const message = await slackapi.conversations.history({
     channel,
