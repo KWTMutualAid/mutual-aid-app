@@ -1,5 +1,6 @@
 const { createEventAdapter } = require("@slack/events-api");
 // const { openHomeWithSections } = require("~slack/home");
+const onReimbursementReply = require("../event-listeners/reimbursementReply");
 
 const slackEvents = createEventAdapter(process.env.SLACK_SIGNING_SECRET);
 
@@ -12,5 +13,7 @@ slackEvents.on("error", console.error);
 //     openHomeWithSections(event.user, ["base"]);
 //   }
 // });
+
+onReimbursementReply.register(slackEvents);
 
 module.exports = slackEvents.requestListener();
