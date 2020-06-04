@@ -8,16 +8,18 @@ const getAddressMetadata = require("~lib/geo/getAddressMetadata");
 module.exports = async function newNeed(need) {
   let channel;
   const directedTo = need.get(needsFields.directedTo);
-  if (
-    directedTo &&
-    directedTo.includes(needsFields.directedTo_options.communityNeedsTest)
-  ) {
+  const directedToPrior = need.getPrior(needsFields.directedTo);
+  const shouldBeDirected = channelField => {
+    return (
+      directedTo &&
+      (!directedToPrior || !directedToPrior.includes(channelField)) &&
+      directedTo.includes(channelField)
+    );
+  };
+  if (shouldBeDirected(needsFields.directedTo_options.communityNeedsTest)) {
     channel = REQUESTS_TEST_CHANNEL;
   }
-  if (
-    directedTo &&
-    directedTo.includes(needsFields.directedTo_options.communityNeeds)
-  ) {
+  if (shouldBeDirected(needsFields.directedTo_options.communityNeeds)) {
     channel = REQUESTS_CHANNEL;
   }
 
